@@ -299,7 +299,7 @@ int upload(const char *hostname, const char *uri, nservers_t *ns,
         if (nbytes == -1)
             break;
 #if 0
-	printf("[%d] sent %d bytes\n", i, nbytes);
+    printf("[%d] sent %d bytes\n", i, nbytes);
 #endif
     }
 

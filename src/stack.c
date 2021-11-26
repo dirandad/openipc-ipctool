@@ -14,8 +14,8 @@ __attribute__((weak, noreturn))
 void __stack_chk_fail(void)
 {
 #if __STDC_HOSTED__
-	abort();
+    abort();
 #elif __is_myos_kernel
-	panic("Stack smashing detected");
+    panic("Stack smashing detected");
 #endif
 }
