@@ -6,13 +6,10 @@
 
 #include <arpa/inet.h>
 #include <fcntl.h>
-#include <netdb.h>
 #include <poll.h>
 #include <sys/errno.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
 

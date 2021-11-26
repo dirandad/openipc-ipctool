@@ -6,7 +6,6 @@
 #include "anjoy.h"
 
 #include "chipid.h"
-#include "tools.h"
 
 bool is_anjoy_board() {
     if (!access("/opt/ch/star.flag", 0)) {

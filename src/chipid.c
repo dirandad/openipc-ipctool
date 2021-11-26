@@ -1,14 +1,8 @@
-#include <ctype.h>
 #include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <dlfcn.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
 
 #include "chipid.h"
 #include "hal_common.h"

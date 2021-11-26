@@ -1,5 +1,3 @@
-#include <assert.h>
-#include <regex.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -9,16 +7,10 @@
 #include <string.h>
 
 #include <arpa/inet.h>
-#include <netdb.h>
 #include <sys/socket.h>
-#include <sys/stat.h>
 #include <sys/types.h>
-#include <sys/wait.h>
-#include <unistd.h>
 
 #include "dns.h"
-#include "http.h"
-#include "tools.h"
 
 typedef struct {
     uint16_t xid;     /* Randomly chosen identifier */

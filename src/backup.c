@@ -11,14 +11,9 @@
 #include <string.h>
 
 #include <arpa/inet.h>
-#include <fcntl.h>
-#include <netdb.h>
-#include <sys/mman.h>
 #include <sys/mount.h>
 #include <sys/reboot.h>
 #include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
 

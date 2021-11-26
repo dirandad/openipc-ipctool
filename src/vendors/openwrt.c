@@ -1,9 +1,5 @@
-#include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 
-#include <fcntl.h>
-#include <sys/ioctl.h>
 #include <unistd.h>
 
 #include "chipid.h"

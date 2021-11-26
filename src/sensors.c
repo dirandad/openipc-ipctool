@@ -1,21 +1,13 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include <fcntl.h>
-#include <linux/i2c-dev.h>
-#include <linux/i2c.h>
-#include <linux/ioctl.h>
-#include <pthread.h>
-#include <sys/ioctl.h>
-#include <sys/resource.h>
 #include <sys/types.h>
 #include <unistd.h>
 
 #include "chipid.h"
 #include "cjson/cJSON.h"
 #include "hal_common.h"
-#include "hal_xm.h"
 #include "sensors.h"
 #include "tools.h"
 

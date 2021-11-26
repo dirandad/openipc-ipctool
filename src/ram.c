@@ -1,7 +1,5 @@
 #include <stdio.h>
-#include <string.h>
 
-#include "chipid.h"
 #include "hal_common.h"
 #include "ram.h"
 #include "tools.h"
