@@ -70,13 +70,11 @@ static bool hw_detect_system() {
     // hi3536c
     case 0x12080000:
         return hisi_detect_cpu(0x12050000);
-        break;
     // hi3516av100
     // hi3516cv100
     // hi3518ev200
     case 0x20080000:
         return hisi_detect_cpu(0x20050000);
-        break;
     default:
         return generic_detect_cpu();
     }
