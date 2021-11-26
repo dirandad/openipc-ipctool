@@ -26,7 +26,7 @@ If you like our work, please consider supporting us on [Opencollective](https://
 
 ### Thanks a lot !!!
 
-<p align="center">
+<p style="text-align: center">
 <a href="https://opencollective.com/openipc/contribute/backer-14335/checkout" target="_blank"><img src="https://opencollective.com/webpack/donate/button@2x.png?color=blue" width="300" alt="OpenCollective donate button" /></a>
 <a href="https://www.paypal.com/donate/?hosted_button_id=C6F7UJLA58MBS"><img src="https://www.paypalobjects.com/en_US/IT/i/btn/btn_donateCC_LG.gif" alt="PayPal donate button" /> </a>
 <a href="https://openipc.org/donation/yoomoney.html"><img src="https://yoomoney.ru/transfer/balance-informer/balance?id=596194605&key=291C29A811B500D7" width="100" alt="YooMoney donate button" /> </a>
@@ -38,7 +38,7 @@ If you like our work, please consider supporting us on [Opencollective](https://
 
 Use [the
 link](https://github.com/OpenIPC/ipctool/releases/download/latest/ipctool)
-to download latest build (even directly to your camera). The build uses `musl`
+to download the latest build (even directly to your camera). The build uses `musl`
 C library to work on vast majority of hardware.
 
 ### Alternative launch methods
@@ -239,11 +239,11 @@ sensors:
 
 Tested on:
 
-|Manufacturer|Models|
-|---|---|
-|[HiSilicon](https://github.com/openIPC/camerasrnd/#chip-families-information)|Hi3516CV100/200/300, Hi3516EV100/200/300, Hi3516DV300|
-|[SigmaStar](http://linux-chenxing.org/)|SSC335|
-|[Xiongmai](http://www.xiongmaitech.com/product)|XM510, XM530, XM550|
+| Manufacturer                                                                  | Models                                                |
+|-------------------------------------------------------------------------------|-------------------------------------------------------|
+| [HiSilicon](https://github.com/openIPC/camerasrnd/#chip-families-information) | Hi3516CV100/200/300, Hi3516EV100/200/300, Hi3516DV300 |
+| [SigmaStar](http://linux-chenxing.org/)                                       | SSC335                                                |
+| [Xiongmai](http://www.xiongmaitech.com/product)                               | XM510, XM530, XM550                                   |
 
 Please test on your device to help us extend the list.
 
@@ -251,23 +251,23 @@ Please test on your device to help us extend the list.
 
 Tested on:
 
-|Manufacturer|Models|
-|---|---|
-|Xiongmai| Various models |
-|Hankvision | V6202IR-IMX327 |
-|Ruision | RS-H649F-A0, RS-H651JAI-AO, RS-H656S-AO |
+| Manufacturer | Models                                  |
+|--------------|-----------------------------------------|
+| Xiongmai     | Various models                          |
+| Hankvision   | V6202IR-IMX327                          |
+| Ruision      | RS-H649F-A0, RS-H651JAI-AO, RS-H656S-AO |
 
 ## Supported sensors
 
 Tested on:
 
-|Manufacturer           |Models                                 |
-|-----------------------|---------------------------------------|
-|Silicon Optronics, Inc.|JX-F22, JX-F23, JX-F37, JX-H62, JX-H65, JX-K05 |
-|Sony                   |IMX224, IMX290, IMX291, IMX307, IMX322, IMX323, IMX327, IMX335, IMX415 |
-|ON Semiconductor       |AR0130, AR0237                         |
-|SmartSens              |SC2135, SC2232, SC2235, SC2235P, SC2239, SC2315e (SC307E, SC4239Р), SC335E (SC5300) |
-|OmniVision             |OV9712                                 |
-|GalaxyCore             |GC2053                                 |
+| Manufacturer            | Models                                                                              |
+|-------------------------|-------------------------------------------------------------------------------------|
+| Silicon Optronics, Inc. | JX-F22, JX-F23, JX-F37, JX-H62, JX-H65, JX-K05                                      |
+| Sony                    | IMX224, IMX290, IMX291, IMX307, IMX322, IMX323, IMX327, IMX335, IMX415              |
+| ON Semiconductor        | AR0130, AR0237                                                                      |
+| SmartSens               | SC2135, SC2232, SC2235, SC2235P, SC2239, SC2315e (SC307E, SC4239Р), SC335E (SC5300) |
+| OmniVision              | OV9712                                                                              |
+| GalaxyCore              | GC2053                                                                              |
 
 Please test on your device to help us extend the list.
