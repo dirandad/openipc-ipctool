@@ -927,8 +927,9 @@ static size_t mipi_lanes_num() {
             return ev200_mipi_lanes_num();
         else
             return ev300_mipi_lanes_num();
+    default:
+        return 0;
     }
-    return 0;
 }
 
 #define CV200_MIPI_BASE 0x20680000

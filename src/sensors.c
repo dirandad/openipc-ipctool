@@ -43,8 +43,9 @@ static int sony_imx291_fps(u_int8_t frsel, u_int16_t hmax) {
             return 120;
         else if (hmax == 0x0528)
             return 100;
+    default:
+        return 0;
     }
-    return 0;
 }
 
 static const char *sony_imx291_databus(int odbit) {
