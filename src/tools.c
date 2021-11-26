@@ -27,7 +27,7 @@ int compile_regex(regex_t *r, const char *regex_text) {
 }
 
 // reads io register value
-// call with addr == 0 to cleanup cached resources
+// call with addr == 0 to clean up cached resources
 bool mem_reg(uint32_t addr, uint32_t *data, enum REG_OPS op) {
     static int mem_fd;
     static char *loaded_area;

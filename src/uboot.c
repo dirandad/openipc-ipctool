@@ -48,7 +48,7 @@ static void crc32(const void *data, size_t n_bytes, uint32_t *crc) {
 
 #define CRC_SZ 4
 
-// By default use 0x10000 but then can be changed after detection
+// By default, use 0x10000 but then can be changed after detection
 size_t env_len = 0x10000;
 
 // Detect U-Boot environment area offset

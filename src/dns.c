@@ -99,12 +99,12 @@ static void fill_dns_req(uint8_t *packet, size_t packetlen,
     uint8_t *prev = (uint8_t *)question_name;
     uint8_t count = 0; /* Used to count the bytes in a field */
 
-    /* Traverse through the name, looking for the . locations */
+    /* Traverse through the name, looking for dots */
     for (size_t i = 0; i < strlen(hostname); i++) {
-        /* A . indicates the end of a field */
+        /* Dot indicates the end of a field */
         if (hostname[i] == '.') {
-            /* Copy the length to the byte before this field, then
-               update prev to the location of the . */
+            /* Copy the length to the byte before this field,
+               then update prev to the position of the dot. */
             *prev = count;
             prev = (uint8_t *)question_name + i + 1;
             count = 0;
@@ -120,18 +120,18 @@ static bool parse_dns_resp(uint8_t *response, ssize_t rlen, a_records_t *srv) {
         return false;
     }
 
-    /* Get a pointer to the start of the question name, and
+    /* Get pointer to the start of the question name, and
        reconstruct it from the fields */
     uint8_t *start_of_name = (uint8_t *)(response + sizeof(dns_header_t));
     uint8_t total = 0;
     uint8_t *field_length = start_of_name;
     while (*field_length != 0) {
-        /* Restore the dot in the name and advance to next length */
+        /* Restore dot in the name and advance to next length */
         total += *field_length + 1;
         *field_length = '.';
         field_length = start_of_name + total;
     }
-    *field_length = '\0'; /* Null terminate the name */
+    *field_length = '\0'; /* Terminate the name with null */
 
     srv->len = 0;
     dns_record_a_t *rec = (dns_record_a_t *)(field_length + 5);
@@ -156,7 +156,7 @@ bool resolv_name(nservers_t *ns, const char *hostname, a_records_t *srv) {
     struct timeval tv = {.tv_sec = DNS_TIMEOUT, .tv_usec = 0};
     setsockopt(socketfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 
-    /* Copy all fields into a single, concatenated packet */
+    /* Copy all fields into a single concatenated packet */
     size_t packetlen =
         sizeof(dns_header_t) + strlen(hostname) + 2 + sizeof(dns_question_t);
     uint8_t *packet = alloca(packetlen);
@@ -175,7 +175,7 @@ bool resolv_name(nservers_t *ns, const char *hostname, a_records_t *srv) {
     for (int i = 0; i < ns->len; i++) {
         address.sin_addr.s_addr = ns->ipv4_addr[i];
 
-        /* Send the packet to DNS server, then request the response */
+        /* Send a packet to DNS server, then request the response */
         sendto(socketfd, packet, packetlen, 0, (struct sockaddr *)&address,
                (socklen_t)sizeof(address));
 

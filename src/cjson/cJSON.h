@@ -242,10 +242,10 @@ CJSON_PUBLIC(cJSON *) cJSON_CreateRaw(const char *raw);
 CJSON_PUBLIC(cJSON *) cJSON_CreateArray(void);
 CJSON_PUBLIC(cJSON *) cJSON_CreateObject(void);
 
-/* Create a string where valuestring references a string so
+/* Create a string where valuestring references a string, so
  * it will not be freed by cJSON_Delete */
 CJSON_PUBLIC(cJSON *) cJSON_CreateStringReference(const char *string);
-/* Create an object/array that only references it's elements so
+/* Create an object/array that only references its elements, so
  * they will not be freed by cJSON_Delete */
 CJSON_PUBLIC(cJSON *) cJSON_CreateObjectReference(const cJSON *child);
 CJSON_PUBLIC(cJSON *) cJSON_CreateArrayReference(const cJSON *child);
@@ -316,7 +316,7 @@ CJSON_PUBLIC(cJSON *) cJSON_Duplicate(const cJSON *item, cJSON_bool recurse);
  */
 /* Recursively compare two cJSON items for equality. If either a or b is NULL or
  * invalid, they will be considered unequal.
- * case_sensitive determines if object keys are treated case sensitive (1) or
+ * case_sensitive determines if object keys are treated case-sensitive (1) or
  * case insensitive (0) */
 CJSON_PUBLIC(cJSON_bool)
 cJSON_Compare(const cJSON *const a, const cJSON *const b,

@@ -140,7 +140,7 @@ void print_chip_id() {
 bool wait_mode = false;
 const char *backup_file;
 static bool backup_mode() {
-    // prevent double backup creation and don't backup OpenWrt firmware
+    // prevent double backup creation and don't back up OpenWrt firmware
     if (!udp_lock() || is_openipc_board())
         return false;
 
@@ -306,8 +306,7 @@ int main(int argc, char *argv[]) {
     } else
         return EXIT_FAILURE;
 
-    // flush stdout before go to sensor detection to avoid buggy kernel
-    // freezes
+    // flush stdout before sensor detection to avoid buggy kernel freezes
     tcdrain(STDOUT_FILENO);
     show_yaml(detect_sensors());
 

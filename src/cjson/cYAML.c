@@ -108,7 +108,7 @@ static unsigned char *ensure(printbuffer *const p, size_t needed) {
             return NULL;
         }
     } else {
-        /* otherwise reallocate manually */
+        /* otherwise, reallocate manually */
         newbuffer = (unsigned char *)p->hooks.allocate(newsize);
         if (!newbuffer) {
             p->hooks.deallocate(p->buffer);
@@ -581,7 +581,7 @@ static unsigned char *print(const cJSON *const item, cJSON_bool format,
             goto fail;
         }
         buffer->buffer = NULL;
-    } else /* otherwise copy the JSON over to a new buffer */
+    } else /* otherwise, copy the JSON over to a new buffer */
     {
         printed = (unsigned char *)hooks->allocate(buffer->offset + 1);
         if (printed == NULL) {
