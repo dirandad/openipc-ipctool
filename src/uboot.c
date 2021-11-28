@@ -155,7 +155,7 @@ static void uboot_setenv(int mtd, uint32_t offset, const char *env,
                         goto rewrite;
                     }
                 }
-                memcpy(oldvalue, newvalue, strlen(newvalue));
+                strcpy(oldvalue, newvalue);
                 towrite = uenv;
                 goto rewrite;
             } else {
