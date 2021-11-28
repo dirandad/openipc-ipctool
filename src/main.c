@@ -84,8 +84,10 @@ int yaml_printf(char *format, ...) {
 }
 
 void show_yaml(cJSON *json) {
-    if (!json)
+    if (!json) {
+        fprintf(stderr, "Empty.");
         return;
+    }
 
     char *string = cYAML_Print(json);
     fprintf(stdout, "%s", string);
@@ -96,8 +98,15 @@ void show_yaml(cJSON *json) {
 }
 
 void print_system_id() {
-    if (!*system_manufacturer && !*system_id)
+    if (!*system_manufacturer) {
+        fprintf(stderr, "No vendor.\n");
         return;
+    }
+
+    if (!*system_id) {
+        fprintf(stderr, "No model.\n");
+        return;
+    }
 
     yaml_printf("vendor: %s\n"
                 "model: %s\n",
@@ -105,8 +114,15 @@ void print_system_id() {
 }
 
 void print_board_id() {
-    if (!*board_manufacturer && !*board_id)
+    if (!*board_manufacturer) {
+        fprintf(stderr, "No board vendor.\n");
         return;
+    }
+
+    if (!*board_id) {
+        fprintf(stderr, "No board model.\n");
+        return;
+    }
 
     yaml_printf("board:\n");
 
@@ -138,12 +154,19 @@ bool wait_mode = false;
 const char *backup_file;
 static bool backup_mode() {
     // prevent double backup creation and don't back up OpenWrt firmware
-    if (!udp_lock() || is_openipc_board())
+    if (!udp_lock()) {
+        fprintf(stderr, "Cannot bind socket.\n");
         return false;
+    }
+
+    if (is_openipc_board()) {
+        fprintf(stderr, "OpenIPC board.\n");
+        return false;
+    }
 
     int fds[2];
     if (pipe(fds) == -1) {
-        fprintf(stderr, "Pipe Failed");
+        fprintf(stderr, "Pipe failed.\n");
         exit(1);
     }
 
