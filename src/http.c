@@ -233,9 +233,7 @@ char *download(char *hostname, const char *uri, const char *useragent,
             header = 0;
             ptr += 4;
             nrecvd -= ptr - buf;
-        }
-
-        if (!header) {
+        } else {
             if (progress) {
                 int np = 100 * (sptr - binbuf) / *len;
                 if (np != percent) {
