@@ -116,8 +116,7 @@ static unsigned char *ensure(printbuffer *const p, size_t needed) {
             p->buffer = NULL;
 
             return NULL;
-        }
-        if (newbuffer) {
+        } else {
             memcpy(newbuffer, p->buffer, p->offset + 1);
         }
         p->hooks.deallocate(p->buffer);
