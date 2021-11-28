@@ -7,11 +7,11 @@
 #include "vendors/openwrt.h"
 
 bool is_openwrt_board() {
-    if (!access("/etc/openwrt_version", 0)) {
-        strcpy(board_manufacturer, "OpenWrt");
-        return true;
+    if (access("/etc/openwrt_version", 0)) {
+        return false;
     }
-    return false;
+    strcpy(board_manufacturer, "OpenWrt");
+    return true;
 }
 
 static bool detect_openwrt_product() {
