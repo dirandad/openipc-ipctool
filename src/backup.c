@@ -78,7 +78,7 @@ static bool cb_mtd_backup(int i, const char *name, struct mtd_info_user *mtd,
     return true;
 }
 
-static int map_mtdblocks(span_t *blocks, size_t bl_len) {
+static size_t map_mtdblocks(span_t *blocks, size_t bl_len) {
     mtd_backup_ctx mtd;
     mtd.blocks = blocks;
     mtd.cap = bl_len;
@@ -110,7 +110,7 @@ int save_file(const char *filename, span_t blocks[MAX_MTDBLOCKS + 1],
             fwrite(&len_header, 1, sizeof(len_header), fp);
         }
 
-        int nbytes = fwrite(blocks[i].data, 1, blocks[i].len, fp);
+        size_t nbytes = fwrite(blocks[i].data, 1, blocks[i].len, fp);
         if (nbytes == -1)
             break;
 #if 0
@@ -181,7 +181,7 @@ char *download_backup(const char *mac, size_t *size, char *date) {
     }
 }
 
-static int yaml_idlvl(char *from, char *start) {
+static int yaml_idlvl(char *from, const char *start) {
     int cnt = 0;
     while (start != --from) {
         if (*from != ' ')
@@ -204,7 +204,7 @@ static int yaml_parseblock(char *start, int indent, stored_mtd_t *mi) {
     char *param = NULL;
     bool linestart = true;
     int spaces = 0;
-    int len = strlen(start);
+    size_t len = strlen(start);
     bool has_dash = false;
 
     int i = -1;
@@ -327,8 +327,9 @@ static void umount_fs(const char *path) {
     if (!try_umount(path)) {
         fprintf(stderr, ", aborting...\n");
         exit(1);
-    } else
-        printf("Unmounting %s\n", path);
+    }
+
+    printf("Unmounting %s\n", path);
 }
 
 static bool umount_all() {
@@ -356,7 +357,7 @@ static bool umount_all() {
     return true;
 }
 
-static void print_flash_progress(int cur, int max, char status) {
+static void print_flash_progress(size_t cur, size_t max, char status) {
     char *bar = alloca(max) + 1;
     for (int i = 0; i < max; i++) {
         if (cur == i)
@@ -398,7 +399,7 @@ static bool do_flash(const char *phase, stored_mtd_t *mtdbackup,
 
         printf("%s %s\n", phase, mtdbackup[i].name);
         size_t chunk = mtd->erasesize;
-        int cnt = mtdbackup[i].size / chunk;
+        size_t cnt = mtdbackup[i].size / chunk;
         for (int c = 0; c < cnt; c++) {
             size_t this_offset;
             int newi =
@@ -493,7 +494,6 @@ static int restore_backup(const char *arg, bool skip_env, bool force) {
             backup = download_backup(arg, &size, date);
         } else {
             fprintf(stderr, "Loading backup from file %s...\n", arg);
-
             backup = file_to_buf(arg, &size);
         }
     }
@@ -555,7 +555,7 @@ static int restore_backup(const char *arg, bool skip_env, bool force) {
                 SHA1(digest, pptr, blen);
                 sha1 = ntohl(*(uint32_t *)&digest);
                 snprintf(digest, sizeof(digest), "%.8x", sha1);
-                if (strcmp(digest, mtdbackup[i].sha1)) {
+                if (strcmp(digest, mtdbackup[i].sha1) != 0) {
                     fprintf(stderr,
                             "SHA1 digest differs for '%s', aborting...\n",
                             mtdbackup[i].name);
@@ -612,7 +612,7 @@ static void add_mtdpart(char *dst, const char *name, uint32_t size) {
 }
 
 #define ASSERT_JSON(obj)                                                       \
-    if (!obj) {                                                                \
+    if (!(obj)) {                                                              \
         const char *error_ptr = cJSON_GetErrorPtr();                           \
         if (error_ptr) {                                                       \
             fprintf(stderr, "Error before: %s\n", error_ptr);                  \
@@ -622,7 +622,7 @@ static void add_mtdpart(char *dst, const char *name, uint32_t size) {
     }
 
 #define JSON_CHECK(obj, type)                                                  \
-    if (!obj || !cJSON_Is##type(obj)) {                                        \
+    if (!(obj) || !cJSON_Is##type(obj)) {                                      \
         fprintf(stderr, "Error parsing json\n");                               \
         ret = 2;                                                               \
         goto bailout;                                                          \
@@ -707,8 +707,9 @@ static int do_upgrade(const char *filename, bool force) {
             stderr,
             "Cloud support is not available yet, please specify bundle path\n");
         return 1;
-    } else
-        printf("Using '%s' as upgrade bundle\n", filename);
+    }
+
+    printf("Using '%s' as upgrade bundle\n", filename);
     char *jsond = file_to_buf(filename, &len);
     if (!jsond) {
         fprintf(stderr, "'%s' is not found\n", filename);
@@ -862,7 +863,7 @@ static int do_upgrade(const char *filename, bool force) {
             SHA1(digest, mtdwrite[i].data, payload);
             uint32_t sha1 = ntohl(*(uint32_t *)&digest);
             snprintf(digest, sizeof(digest), "%.8x", sha1);
-            if (strcmp(digest, jsha1->valuestring)) {
+            if (strcmp(digest, jsha1->valuestring) != 0) {
                 fprintf(stderr, "SHA1 digest differs for '%s', aborting...\n",
                         mtdwrite[i].name);
                 ret = 3;

@@ -213,6 +213,7 @@ void disable_printk() {
     FILE *fp = fopen(PRINTK_FILE, "rw+");
     if (!fp)
         return;
+
     const char *ret;
     ret = fgets(printk_state, sizeof(printk_state) - 1, fp);
     // We cannot use rewind() here
@@ -243,9 +244,11 @@ static unsigned long time_by_proc(const char *filename, char *shortname,
     char line[1024];
     if (!fgets(line, sizeof(line), fp))
         return 0;
+
     char *rpar = strchr(line, ')');
     if (!rpar || *(rpar + 1) != ' ')
         return 0;
+
     if (shortname) {
         const char *lpar = strchr(line, '(');
         *rpar = 0;

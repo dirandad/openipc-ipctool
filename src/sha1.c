@@ -267,7 +267,7 @@ void SHA1Final(unsigned char digest[20], SHA1_CTX *context) {
     memset(&finalcount, '\0', sizeof(finalcount));
 }
 
-void SHA1(char *hash_out, const char *str, int len) {
+void SHA1(char *hash_out, const char *str, uint32_t len) {
     SHA1_CTX ctx;
     unsigned int ii;
 
