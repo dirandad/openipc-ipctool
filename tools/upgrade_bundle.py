@@ -14,7 +14,8 @@ template = {
     "partitions": [],
 }
 
-valid_parts = {'boot': 0x40000, 'kernel': 0x200000, 'rootfs': 0x500000}
+valid_parts_8MB = {'boot': 0x40000, 'kernel': 0x200000, 'rootfs': 0x500000}
+valid_parts_16MB = {'boot': 0x40000, 'kernel': 0x300000, 'rootfs': 0xA00000}
 
 
 def add_additional(original, value):
@@ -25,6 +26,10 @@ def add_additional(original, value):
 
 
 def write_bundle(**kwarg):
+    flash = kwarg['flash']
+    if flash != "8MB" and flash != "16MB" and flash:
+        raise Exception('flash must be 8 or 16 (MB)')  
+
     cma = kwarg['cma']
     pack = kwarg['pack']
     if not kwarg['boot']:
@@ -39,7 +44,10 @@ def write_bundle(**kwarg):
     if additional != '':
         template['additionalCmdline'] = additional
 
-    parts = dict((k, v) for k, v in kwarg.items() if k in valid_parts and v)
+    if flash == "8MB" or not flash:
+        parts = dict((k, v) for k, v in kwarg.items() if k in valid_parts_8MB and v)
+    if flash == "16MB":
+        parts = dict((k, v) for k, v in kwarg.items() if k in valid_parts_16MB and v)
 
     blobs = []
     for name, filename in parts.items():
@@ -55,10 +63,15 @@ def write_bundle(**kwarg):
                 'sha1': digest
             }
             if not pack or name == 'boot':
-                pSize = valid_parts[name]
+                if flash == "8MB" or not flash:
+                    pSize = valid_parts_8MB[name]
+                if flash == "16MB":
+                    pSize = valid_parts_16MB[name]
+ 
                 if size > pSize:
                     raise Exception('binary size exceeds partition')
                 part['partitionSize'] = pSize
+            print(part)
             template['partitions'].append(part)
             blobs.append(filecontent)
 
@@ -74,13 +87,11 @@ def main():
     parser.add_argument("-b", "--boot", help="uboot image file")
     parser.add_argument("-k", "--kernel", help="kernel image file")
     parser.add_argument("-r", "--rootfs", help="rootfs image file")
-    parser.add_argument("-o", "--output", help="output filename",
-                        required=True)
+    parser.add_argument("-o", "--output", help="output filename", required=True)
     parser.add_argument("-c", "--cma", help="cma allocator parameters")
-    parser.add_argument("-i", "--init", action="store_true",
-                        help="add /init/init")
-    parser.add_argument("-p", "--pack", action="store_true",
-                        help="pack partitions tightly")
+    parser.add_argument("-i", "--init", action="store_true", help="add /init/init")
+    parser.add_argument("-p", "--pack", action="store_true", help="pack partitions tightly")
+    parser.add_argument("-f", "--flash", help="flash size 8MB (default) or 16MB")
     args = parser.parse_args()
     write_bundle(**vars(args))
 
