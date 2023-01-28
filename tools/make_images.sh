@@ -1,7 +1,8 @@
 #!/bin/bash
 
 SOC=$1
-FLAVOR=lite
+OPENIPC_FLAVOR=$2 # lite, utlimate
+FLASH="8MB" # 8MB, 16MB
 
 ### FIXME: when we needed and what parameters are adjustable?
 #CMA="--cma 'mmz=anonymous,0,0x42000000,96M mmz_allocator=cma'"
@@ -22,6 +23,7 @@ hi3516ev300 hi3518cv100 hi3518ev100 hi3518ev200 hi3518ev201 hi3518ev300
 hi3519v101 hi3520dv200 hi3536cv100 hi3536dv100 t10 t20 t21 t30 t31 nt98562
 nt98566 rv1109 rv1126 msc313e msc316dc msc316dm ssc325 ssc333 ssc335 ssc335de
 ssc337 ssc337de xm510 xm530 xm550"
+VALID_OPENIPC_FLAVORS="lite ultimate"
 VALID_T31_FLAVORS="a al l n x"
 
 ### functions
@@ -45,11 +47,16 @@ mkdir_p() {
 }
 
 print_usage() {
-  echo "Usage: $0 <soc> [<flavor>]"
-  echo "Where flavor is one of [${VALID_T31_FLAVORS}], only for t31 soc."
+  echo "Usage: $0 <soc> <openipc flavor> [<t31 flavor>]"
+  echo "Where openipc flavor is one of [${VALID_OPENIPC_FLAVORS}]."
+  echo "And t31 flavor is one of [${VALID_T31_FLAVORS}], only for t31 soc."
 }
 
 ### business logic
+
+if [ "$OPENIPC_FLAVOR" == "ultimate" ]; then
+  FLASH="16MB"
+fi
 
 if [ -z "$SOC" ]; then
   print_usage
@@ -60,7 +67,16 @@ if ! echo $VALID_SOCS | grep -qE "\b${SOC%_*}\b"; then
   die "${SOC} is not a valid SoC!" 2
 fi
 
-FULL_PATH=$(find ../../openipc-firmware/br-ext-chip-* -name "${SOC}_${FLAVOR}_defconfig")
+if [ -z "$OPENIPC_FLAVOR" ]; then
+  print_usage
+  exit 1
+fi
+
+if ! echo $VALID_OPENIPC_FLAVORS | grep -qE "\b${OPENIPC_FLAVOR%_*}\b"; then
+  die "${OPENIPC_FLAVOR} is not a valid OpenIPC Flavor!" 2
+fi
+
+FULL_PATH=$(find ../../openipc-firmware/br-ext-chip-* -name "${SOC}_${OPENIPC_FLAVOR}_defconfig")
 if [ -z "$FULL_PATH" ]; then
   die "Cannot find anything for ${SOC}" 3
 fi
@@ -68,6 +84,8 @@ fi
 if [ "$(echo ${FULL_PATH} | wc -w)" -gt "1" ]; then
   die "Found multiple options for ${SOC}: ${FULL_PATH}" 4
 fi
+
+
 
 FAMILY=$(grep "BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE" ${FULL_PATH} | head -1 | cut -d "/" -f 3)
 
@@ -78,40 +96,43 @@ BOOT="$SOC"
 ### FIXME: Ingenic T31 family has five bootloaders to chose from.
 ### There should be a better way to do that.
 if [ "t31" = "$BOOT" ]; then
-  if [ -z "$2" ]; then
+  if [ -z "$4" ]; then
     print_usage
     die "T31 SoC requires an additional parameter for bootloader."
   else
-    BOOT="${BOOT}${2}"
+    BOOT="${BOOT}${3}"
   fi
 fi
 
-debug "FULL_PATH: ${FULL_PATH}"
-debug "SOC: ${SOC}"
-debug "FAMILY: ${FAMILY}"
-debug "BOOT: ${BOOT}"
+echo "FULL_PATH: ${FULL_PATH}"
+echo "SOC: ${SOC}"
+echo "OPENIPC_FLAVOR: ${OPENIPC_FLAVOR}"
+echo "FAMILY: ${FAMILY}"
+echo "BOOT: ${BOOT}"
+echo "FLASH: ${FLASH}"
 
 echo_c 37 "Download bootloader"
 echo " - ${DL_URL}/u-boot-${BOOT}-universal.bin"
 wget --quiet --directory-prefix=${TEMP_DIR} ${DL_URL}/u-boot-${BOOT}-universal.bin
 
 echo_c 37 "Download firmware"
-echo " - ${DL_URL}/openipc.${FAMILY}-nor-lite.tgz"
-wget --quiet --output-document=- ${DL_URL}/openipc.${FAMILY}-nor-lite.tgz \
+echo " - ${DL_URL}/openipc.${SOC}-nor-${OPENIPC_FLAVOR}.tgz"
+wget --quiet --output-document=- ${DL_URL}/openipc.${SOC}-nor-${OPENIPC_FLAVOR}.tgz \
   | tar xfz - --directory=${TEMP_DIR}
 
 echo_c 37 "Create ${OUTPUT_DIR}/upgrade.${SOC} bundle using"
-echo " - u-boot-${BOOT}-universal.bin"
-echo " - uImage.${FAMILY}"
-echo " - rootfs.squashfs.${FAMILY}"
+echo " - ${TEMP_DIR}/u-boot-${BOOT}-universal.bin"
+echo " - ${TEMP_DIR}/uImage.${SOC}"
+echo " - ${TEMP_DIR}/rootfs.squashfs.${SOC}"
 
 mkdir_p ${OUTPUT_DIR}
 
 ./upgrade_bundle.py \
   --boot ${TEMP_DIR}/u-boot-${BOOT}-universal.bin \
-  --kernel ${TEMP_DIR}/uImage.${FAMILY} \
-  --rootfs ${TEMP_DIR}/rootfs.squashfs.${FAMILY} \
-  -i -o ${OUTPUT_DIR}/upgrade.${SOC} --pack ${CMA}
+  --kernel ${TEMP_DIR}/uImage.${SOC} \
+  --rootfs ${TEMP_DIR}/rootfs.squashfs.${SOC} \
+  --flash ${FLASH} \
+  -i -o ${OUTPUT_DIR}/upgrade.${SOC} # --pack ${CMA}
 
 rm -r ${TEMP_DIR}
 
