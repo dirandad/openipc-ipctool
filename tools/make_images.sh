@@ -132,7 +132,7 @@ mkdir_p ${OUTPUT_DIR}
   --kernel ${TEMP_DIR}/uImage.${SOC} \
   --rootfs ${TEMP_DIR}/rootfs.squashfs.${SOC} \
   --flash ${FLASH} \
-  -i -o ${OUTPUT_DIR}/upgrade.${SOC} # --pack ${CMA}
+  -i -o ${OUTPUT_DIR}/upgrade.${SOC} --pack # ${CMA}
 
 rm -r ${TEMP_DIR}
 
